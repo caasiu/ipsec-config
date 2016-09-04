@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>IPSec VPN Configuration</title>
+        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+        <script src="https://use.fontawesome.com/de3a0aea15.js"></script>
+
+    </head>
+
+    <body>
+        <header>
+            <div class="header-title">
+                <span class="section-title">IPSec VPN 架设教程</span></br>
+                <span class="section-data">Last Modified: 2016.08.27</span>
+            </div>
+        </header>
+
+        <div id="container">
+            <div id="summary">
+                <ul>
+                    <li>A Chinese guide for IPSec IKEv1/v2 VPN setup on CentOS/Ubuntu VPS</li>
+                    <li>在CentOS/Ubuntu使用Strongswan架设IPSec Ikev1/v2 VPN 教程</li>
+                </ul>
+            </div>
+            <nav class="toc">
+                <h1>目录</h1>
+                <ol>
+                    <li>What's IPSec?</li>
+                    <li>Before Setup</li>
+                    <li>Install Strongswan</li>
+                    <li>Certification</li>
+                    <li>Strongswan Config</li>
+                    <li>Start Strongswan</li>
+                    <li>iptable config</li>
+                    <li>Client Setup</li>
+                </ol>
+            </nav>
+
+            <div id="introduction">
+                <h2>IPSec 是什么？</h2>
+                <p>
+                IPSec是虚拟私密网络(VPN)的一种协议，它通过认证和加密每一个IP数据包来确保IP通信的安全。它由两个阶段组成，第一阶段（Phrase 1, ph1），交换金钥建立连接，使用互联网金钥交换（ike）协议; 第二阶段（Phrase 2, ph2），连接建立后对数据进行加密传输，使用封装安全载荷（esp）协议。
+                </br>
+                参考：<a href="https://en.wikipedia.org/wiki/IPsec">维基百科 IPsec 词条(En)<i class="fa fa-external-link fa-fw"></i></a>
+                </p>
+            </div>
+
+            <div id="precondition">
+                <h2>开始之前</h2>
+                <div class="info-bar">
+                    <b><i class="fa fa-exclamation-circle fa-lg"></i>若已清楚VPS类型及其tun/tap支持ppp, 请跳到<a href="">安装Strongswan</a></b>
+                </div>
+                <div>
+
+                <p>用ssh连接上你的VPS, 在命令行中输入下列命令:</p>
+                <pre><code>
+                $ <span>cat</span> /dev/net/tun 
+                </code></pre>
+                <p>输出应该是:</p>
+                <pre><code>
+                <span>cat</span>: /dev/net/tun: File descriptor in bad state
+                </code></pre>
+                <p>再输入以下命令:</p>
+                <pre><code>
+                $ <span>cat</span> /dev/ppp 
+                </code></pre>
+                <p>输出应该是:</p>
+                <pre><code>
+                <span>cat</span>: /dev/ppp: No such device or address
+                </code></pre>
+                <p>若没有以上输出则无法继续下一步, 请联系你VPS的客服</p>
+
+                </div>
+            </div>
+
+            <div id="installation">
+                <h2>安装Strongswan</h2>
+                <div class="info-bar">
+                    <i class="fa fa-exclamation-circle fa-lg"></i>建议使用手动安装, 特别是OpenCV的VPS
+                </div>
+                <h4>安装必须的依赖</h4>
+                <p><i class="fa fa-chevron-circle-right fa-fw"></i> CentOS:</p>
+                <pre><code>
+                # yum update
+                # yum install gmp-devel pam-devel openssl-devel libssl-dev make gcc
+                </code></pre>
+                <p><i class="fa fa-chevron-circle-right fa-fw"></i> Ubuntu:</p>
+                <pre><code>
+                # apt-get update
+                # apt-get install libgmp3-dev openssl-devel libssl-dev make gcc
+                </code></pre>
+                <h4>下载Strongswan</h4>
+                <pre><code>
+                $ wget http://download.strongswan.org/strongswan.tar.bz2
+                $ tar xjvf strongswan.tar.bz2
+                $ cd strongswan\
+                </code></pre>
+                <h4>编译</h4>
+                <p><i class="fa fa-chevron-circle-right fa-fw"></i> Xen、KVM类型</p>
+                <pre><code>
+                $ ./configure --prefix=/usr --sysconfdir=/etc \
+                --enable-eap-mschapv2 --enable-xauth-eap --enable-eap-identity --enable-eap-tls \
+                --enable-eap-ttls --enable-eap-md5 --enable-eap-tnc --enable-eap-dynamic \
+                --enable-openssl --disable-gmp enable-eap-aka --enable-nat-transport
+                </code></pre>
+                <p><i class="fa fa-chevron-circle-right fa-fw"></i> OpenCV类型 (需添加<b style="color:red">enable-kernel-libipsec</b>)</p>
+                <pre><code>
+                $ ./configure --prefix=/usr --sysconfdir=/etc \
+                --enable-eap-mschapv2 --enable-xauth-eap --enable-eap-identity --enable-eap-tls \
+                --enable-eap-ttls --enable-eap-md5 --enable-eap-tnc --enable-eap-dynamic \
+                --enable-openssl --disable-gmp enable-eap-aka --enable-nat-transport \
+                --enable-kernel-libipsec 
+                </code></pre>
+                <h4>安装</h4>
+                <div class="warn-bar">
+                    <i class="fa fa-exclamation-triangle fa-lg"></i>不要make && make install, 请确保make的时候没有错误提示
+                </div>
+                <pre><code>
+                # make
+                # make install
+                </code></pre>
+            </div>
+
+            <div id="certification">
+                <h2>生成证书</h2>
+                <h4>生成自签名的根证书 (root CA)</h4>
+                <pre><code>
+                $ cd /etc/ipsec.d/
+                $ ipsec pki --gen --type rsa --size 2048 \
+                            --outform pem \
+                            > private/ca.key.pem
+                $ chmod 600 private/ca.key.pem
+                $ ipsec pki --self --ca --lifetime 730 \
+                            --in private/ca.key.pem --type rsa \
+                            --dn "C=CN, O=strongSwan, CN=strongSwan Root CA" \
+                            --outform pem \
+                            > cacerts/ca.cert.pem
+                </code></pre>
+                <p>
+                    size 2048: 2048 bit 的 RSA 密匙
+                    <br>
+                    lifetime 730: 730天 (2年)
+                    <br>
+                    dn: C 代表国家, O 代表组织, CN(common name) 代表名称
+                </p>
+                <h4>生成服务器证书 (host CA)</h4>
+                <pre><code>
+                $ cd /etc/ipsec.d/
+                $ ipsec pki --gen --type rsa --size 2048 \
+                            --outform pem \
+                            > private/host.key.pem
+                $ chmod 600 private/host.key.pem
+                $ ipsec pki --pub --in private/host.key.pem --type rsa | \
+                            ipsec pki --issue --lifetime 730 \
+                            --cacert cacerts/ca.cert.pem \
+                            --cakey private/ca.key.pem \
+                            --dn "C=CN, O=strongSwan, CN=vpn.example.com" \
+                            --san "1.2.3.4" \
+                            --flag serverAuth --flag ikeIntermediate \
+                            --outform pem > certs/host.cert.pem
+                </code></pre>
+                <p>
+                    CN: 填的是你服务器的 URL 或 IP
+                    <br>
+                    san: 填的是服务器IP
+                </p>
+                <h4>生成客户端证书 (client CA)</h4>
+                <pre><code>
+                $ cd /etc/ipsec.d/
+                $ ipsec pki --gen --type rsa --size 2048 \
+                            --outform pem \
+                            > private/client.key.pem
+                $ chmod 600 private/client.key.pem
+                $ ipsec pki --pub --in private/client.key.pem --type rsa | \
+                            ipsec pki --issue --lifetime 730 \
+                            --cacert cacerts/ca.cert.pem \
+                            --cakey private/ca.key.pem \
+                            --dn "C=CN, O=strongSwan, CN=myself@example.com" \
+                            --san myself@example.com \
+                            --outform pem > certs/client.cert.pem
+                </code></pre>
+                <h4>生成pkcs12证书</h4>
+                <div class="info-bar">
+                    <i class="fa fa-exclamation-circle fa-lg"></i>使用IKEv2一定要生成该证书
+                </div>
+                <pre><code>
+                $ openssl pkcs12 -export -inkey private/client.key.pem \
+                          -in certs/client.cert.pem -name "My own VPN client certificate" \
+                          -certfile cacerts/ca.cert.pem \
+                          -caname "strongSwan Root CA" \
+                          -out client.p12
+                </code></pre>
+                <div class="danger-bar">
+                    <i class="fa fa-ban fa-lg"></i>caname 一定要与第一步的 CN(common name) 一致
+                </div>
+                <p>
+                    这里要输入密码，在安装client.p12会用到这个密码。密码可以为空
+                    <br>
+                    然后将该证书发生到客户端安装 (IOS设备要发送ca.cert.pem和client.p12)
+                    <br>
+                    更多详情参考StrongSwan Wiki
+                </p>
+                <div class="warn-bar">
+                    <i class="fa fa-exclamation-triangle fa-lg"></i>为了安全请把根证书私密(ca.key.pem)移动到无法联网的设备上储存
+                </div>
+            </div>
+
+            <div id="config">
+                <h2>Strongswan 配置</h2>
+                <h4>ipsec.conf</h4>
+                <pre><code>
+# /etc/ipsec.conf
+# ipsec.conf - strongSwan IPsec configuration file
+
+# basic configuration
+
+config setup
+    # strictcrlpolicy=yes
+    uniqueids = never
+
+
+conn %default
+    keyexchange = ike
+    
+    dpdaction = clear
+    dpddelay = 35s
+    dpdtimeout = 300s
+
+
+# for IOS 6+ and Android 4+ without install CA
+conn IPSec-IKEv1-PSK
+    keyexchange = ikev1
+    fragmentation = yes
+    
+    #left -- local(server) side
+    left = %any
+    leftauth = psk
+    leftsubnet = 0.0.0.0/0
+
+    #right -- remote(client) side
+    right = %any
+    rightauth = psk
+    rightauth2 = xauth
+    rightsourceip = 10.36.1.0/24
+
+    auto = add
+
+
+# for IOS 8+ Android 4.4+ Win 7+
+conn IPSec-IKEv2
+    keyexchange = ikev2
+    ike = aes256-sha1-modp1024,aes128-sha1-modp1024,3des-sha1-modp1024!
+    esp = aes256-sha256,aes256-sha1,3des-sha1!
+    eap_identity = %any
+    fragmentation = yes
+    
+    #left -- local(server) side
+    left = %any
+    leftauth = pubkey
+    leftcert = host.cert.pem
+    leftsubnet = 0.0.0.0/0
+    leftsendcert = always
+
+    #right -- remote(client) side
+    right = %any
+    rightauth = eap-mschapv2
+    rightcert = client.cert.pem
+    rightsourceip = 10.36.2.0/24
+    rightsendcert = never
+
+    auto = add
+                </code></pre>
+                <h4>ipsec.secrets</h4>
+                <pre><code>
+# /etc/ipsec.secrets
+# ipsec.secrets
+
+: RSA host.key.pem
+: PSK "your_psk"
+
+# use XAUTH
+user1 : XAUTH "password"
+user2 : XAUTH "password"
+
+# use EAP
+user3 : EAP "password"
+user4 : EAP "password"
+                </code></pre>
+                <h4>strongswan.conf</h4>
+                <pre><code>
+# strongswan.conf - strongSwan configuration file
+
+charon {
+    load_modular = yes
+    duplicheck.enable = no #是为了你能同时连接多个设备，所以要把冗余检查关闭
+    compress = yes
+    plugins {
+        include strongswan.d/charon/*.conf
+                            
+    }
+
+    dns1 = 8.8.4.4
+    dns2 = 8.8.8.8
+
+    # for Windows WINS Server
+    nbns1 = 8.8.4.4
+    nbns2 = 8.8.8.8
+}
+
+include strongswan.d/*.conf
+                </code></pre>
+            </div>
+
+            <div id="iptable">
+                <h2>配置防火墙</h2>
+                <h4>sysctl.conf</h4>
+                <p>
+                    在 /etc/sysctl.conf 中增加如下行或去掉下列行的"#", 保存后执行sysctl -p
+                    <br>
+                    如果执行后有报错的, 重新打开 sysctl.conf 将报错的部分#注释掉保存, <span style="color:red">直到执行sysctl -p不再报错为止</span>
+                </p>
+                <pre><code>
+net.ipv4.ip_forward = 1
+net.ipv4.conf.all.accept_redirects = 0 
+net.ipv4.conf.all.send_redirects = 0
+net.ipv6.conf.all.forwarding = 1
+
+net.ipv4.tcp_syncookies = 1
+                </pre></code>
+                <h4>iptables 转发</h4>
+
+            </div>
+
+        </div>
+
+        <footer>
+            <div>
+                <div class="footer-left">
+                    <p>&copy; 2016 Caasiu Roger</p>
+                </div>
+                <div class="footer-right">
+                    <ul>
+                        <li>
+                            <a href="mailto:caasiu@outlook.com">
+                                <i class="fa fa-envelope fa-fw"></i> Email
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/caasiu/ipsec-config">
+                                <i class="fa fa-github-square fa-fw"></i> Github
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <i class="fa fa-bars fa-fw"></i> About
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+
+    </body>
+
+</html>
