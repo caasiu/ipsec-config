@@ -20,10 +20,11 @@
 
         <div id="container">
             <div id="summary">
-                <ul>
-                    <li>A Chinese guide for IPSec IKEv1/v2 VPN setup on CentOS/Ubuntu VPS</li>
-                    <li>在CentOS/Ubuntu使用Strongswan架设IPSec Ikev1/v2 VPN 教程</li>
-                </ul>
+                <p>
+                    A Chinese guide for IPSec IKEv1/v2 VPN setup on CentOS/Ubuntu VPS
+                    <br>
+                    在CentOS/Ubuntu使用Strongswan架设IPSec Ikev1/v2 VPN 教程
+                </p>
             </div>
             <nav class="toc">
                 <h1>目录</h1>
@@ -81,7 +82,7 @@
                 <div class="info-bar">
                     <i class="fa fa-exclamation-circle fa-lg"></i>建议使用手动安装, 特别是OpenCV的VPS
                 </div>
-                <h4>安装必须的依赖</h4>
+                <h4><span class="step">1</span>安装必须的依赖</h4>
                 <p><i class="fa fa-chevron-circle-right fa-fw"></i> CentOS:</p>
                 <pre><code>
                 # yum update
@@ -92,13 +93,13 @@
                 # apt-get update
                 # apt-get install libgmp3-dev openssl-devel libssl-dev make gcc
                 </code></pre>
-                <h4>下载Strongswan</h4>
+                <h4><span class="step">2</span>下载Strongswan</h4>
                 <pre><code>
                 $ wget http://download.strongswan.org/strongswan.tar.bz2
                 $ tar xjvf strongswan.tar.bz2
                 $ cd strongswan\
                 </code></pre>
-                <h4>编译</h4>
+                <h4><span class="step">3</span>编译</h4>
                 <p><i class="fa fa-chevron-circle-right fa-fw"></i> Xen、KVM类型</p>
                 <pre><code>
                 $ ./configure --prefix=/usr --sysconfdir=/etc \
@@ -114,7 +115,7 @@
                 --enable-openssl --disable-gmp enable-eap-aka --enable-nat-transport \
                 --enable-kernel-libipsec 
                 </code></pre>
-                <h4>安装</h4>
+                <h4><span class="step">4</span>安装</h4>
                 <div class="warn-bar">
                     <i class="fa fa-exclamation-triangle fa-lg"></i>不要make && make install, 请确保make的时候没有错误提示
                 </div>
@@ -126,7 +127,7 @@
 
             <div id="certification">
                 <h2>生成证书</h2>
-                <h4>生成自签名的根证书 (root CA)</h4>
+                <h4><span class="step">1</span>生成自签名的根证书 (root CA)</h4>
                 <pre><code>
                 $ cd /etc/ipsec.d/
                 $ ipsec pki --gen --type rsa --size 2048 \
@@ -146,7 +147,7 @@
                     <br>
                     dn: C 代表国家, O 代表组织, CN(common name) 代表名称
                 </p>
-                <h4>生成服务器证书 (host CA)</h4>
+                <h4><span class="step">2</span>生成服务器证书 (host CA)</h4>
                 <pre><code>
                 $ cd /etc/ipsec.d/
                 $ ipsec pki --gen --type rsa --size 2048 \
@@ -167,7 +168,7 @@
                     <br>
                     san: 填的是服务器IP
                 </p>
-                <h4>生成客户端证书 (client CA)</h4>
+                <h4><span class="step">3</span>生成客户端证书 (client CA)</h4>
                 <pre><code>
                 $ cd /etc/ipsec.d/
                 $ ipsec pki --gen --type rsa --size 2048 \
@@ -182,7 +183,7 @@
                             --san myself@example.com \
                             --outform pem > certs/client.cert.pem
                 </code></pre>
-                <h4>生成pkcs12证书</h4>
+                <h4><span class="step">4</span>生成pkcs12证书</h4>
                 <div class="info-bar">
                     <i class="fa fa-exclamation-circle fa-lg"></i>使用IKEv2一定要生成该证书
                 </div>
@@ -210,7 +211,10 @@
 
             <div id="config">
                 <h2>Strongswan 配置</h2>
-                <h4>ipsec.conf</h4>
+                <div class="info-bar">
+                    <i class="fa fa-check-circle fa-lg"></i>配置文件可以从我 <a href="https://github.com/caasiu/ipsec-config">Github</a> 下载
+                </div>
+                <h4><span class="step">1</span>编辑 ipsec.conf</h4>
                 <pre><code>
 # /etc/ipsec.conf
 # ipsec.conf - strongSwan IPsec configuration file
@@ -273,7 +277,7 @@ conn IPSec-IKEv2
 
     auto = add
                 </code></pre>
-                <h4>ipsec.secrets</h4>
+                <h4><span class="step">2</span>编辑 ipsec.secrets</h4>
                 <pre><code>
 # /etc/ipsec.secrets
 # ipsec.secrets
@@ -289,7 +293,7 @@ user2 : XAUTH "password"
 user3 : EAP "password"
 user4 : EAP "password"
                 </code></pre>
-                <h4>strongswan.conf</h4>
+                <h4><span class="step">3</span>编辑 strongswan.conf</h4>
                 <pre><code>
 # strongswan.conf - strongSwan configuration file
 
