@@ -149,6 +149,11 @@ nav ol li {
     display: block;
 }
 
+#iptable {
+    border-bottom: 2px solid #dadada;
+    display: block;
+}
+
 .step {
     font-size: 20px;
     padding: 2px 7px;
@@ -168,6 +173,7 @@ pre {
 }
 
 code {
+    overflow: auto;
     font-size: 18px;
     font-family: "Roboto", "Helvetica", sans-serif;
     word-spacing: 2px;
