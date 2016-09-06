@@ -5,7 +5,11 @@
         <title>IPSec VPN Configuration</title>
         <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
         <link rel="stylesheet" type="text/css" href="css/main.css">
+        <!-- Font Awesome -->
         <script src="https://use.fontawesome.com/de3a0aea15.js"></script>
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+        <script src="js/main.js"></script>
 
     </head>
 
@@ -51,7 +55,7 @@
             <div id="precondition">
                 <h2>开始之前</h2>
                 <div class="info-bar">
-                    <b><i class="fa fa-exclamation-circle fa-lg"></i>若已清楚VPS类型及其tun/tap支持ppp, 请跳到<a href="#installation">安装Strongswan</a></b>
+                    <i class="fa fa-exclamation-circle fa-lg"></i>若已清楚VPS虚拟化类型及其 tun/tap 支持ppp, 请跳到 <a href="#installation">安装Strongswan</a>
                 </div>
                 <div>
 
@@ -79,19 +83,27 @@
             <div id="installation">
                 <h2>安装Strongswan</h2>
                 <div class="info-bar">
-                    <i class="fa fa-exclamation-circle fa-lg"></i>建议使用手动安装, 特别是OpenCV的VPS
+                    <i class="fa fa-exclamation-circle fa-lg"></i>建议使用手动安装, 特别是OpenVZ的VPS
                 </div>
                 <h4><span class="step">1</span>安装必须的依赖</h4>
-                <p><i class="fa fa-chevron-circle-right fa-fw"></i> CentOS:</p>
-                <pre><code>
+                <ul class="btn-group">
+                    <li><a id="installation-btn-l" href="javascript:void(0)">CentOS</a></li>
+                    <li><a id="installation-btn-r" href="javascript:void(0)">Ubuntu</a></li>
+                </ul>
+                <div id="installation-os-c">
+                    <p><i class="fa fa-chevron-circle-right fa-fw"></i> CentOS:</p>
+                    <pre><code>
                 # yum update
                 # yum install gmp-devel pam-devel openssl-devel libssl-dev make gcc
-                </code></pre>
-                <p><i class="fa fa-chevron-circle-right fa-fw"></i> Ubuntu:</p>
-                <pre><code>
+                    </code></pre>
+                </div>
+                <div id="installation-os-u">
+                    <p><i class="fa fa-chevron-circle-right fa-fw"></i> Ubuntu:</p>
+                    <pre><code>
                 # apt-get update
                 # apt-get install libgmp3-dev openssl-devel libssl-dev make gcc
-                </code></pre>
+                    </code></pre>
+                </div>
                 <h4><span class="step">2</span>下载Strongswan</h4>
                 <pre><code>
                 $ wget http://download.strongswan.org/strongswan.tar.bz2
@@ -99,6 +111,10 @@
                 $ cd strongswan-*
                 </code></pre>
                 <h4><span class="step">3</span>编译</h4>
+                <ul class="btn-group">
+                    <li><a href="javascript:void(0)">Xen、KVM</a></li>
+                    <li><a href="javascript:void(0)">OpenVZ</a></li>
+                </ul>
                 <p><i class="fa fa-chevron-circle-right fa-fw"></i> Xen、KVM类型</p>
                 <pre><code>
                 $ ./configure --prefix=/usr --sysconfdir=/etc \
@@ -106,7 +122,7 @@
                 --enable-eap-ttls --enable-eap-md5 --enable-eap-tnc --enable-eap-dynamic \
                 --enable-openssl --disable-gmp enable-eap-aka --enable-nat-transport
                 </code></pre>
-                <p><i class="fa fa-chevron-circle-right fa-fw"></i> OpenCV类型 (需添加<b style="color:red">enable-kernel-libipsec</b>)</p>
+                <p><i class="fa fa-chevron-circle-right fa-fw"></i> OpenVZ类型 (需添加<b style="color:red">enable-kernel-libipsec</b>)</p>
                 <pre><code>
                 $ ./configure --prefix=/usr --sysconfdir=/etc \
                 --enable-eap-mschapv2 --enable-xauth-eap --enable-eap-identity --enable-eap-tls \
@@ -335,7 +351,11 @@ net.ipv6.conf.all.forwarding = 1
 net.ipv4.tcp_syncookies = 1
                 </pre></code>
                 <h4><span class="step">2</span>设置 iptables 转发</h4>
-                <p><i class="fa fa-chevron-circle-right fa-fw"></i> OpenCV类型, 执行:</p>
+                <ul class="btn-group">
+                    <li><a href="javascript:void(0)">Xen、KVM</a></li>
+                    <li><a href="javascript:void(0)">OpenVZ</a></li>
+                </ul>
+                <p><i class="fa fa-chevron-circle-right fa-fw"></i> OpenVZ类型, 执行:</p>
                 <pre><code>
 # iptables -A INPUT -i venet0 -p esp -j ACCEPT
 # iptables -A INPUT -i venet0 -p udp --dport 500 -j ACCEPT
@@ -356,6 +376,10 @@ net.ipv4.tcp_syncookies = 1
 # iptables -A FORWARD -s 10.36.2.0/24  -j ACCEPT
                 </code></pre>
                 <h4><span class="step">3</span>开机自动载入 iptables 设定</h4>
+                <ul class="btn-group">
+                    <li><a href="javascript:void(0)">CentOS</a></li>
+                    <li><a href="javascript:void(0)">Ubuntu</a></li>
+                </ul>
                 <p><i class="fa fa-chevron-circle-right fa-fw"></i> CentOS, 执行:</p>
                 <pre><code>
 # /sbin/service iptables save
