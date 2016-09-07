@@ -7,68 +7,52 @@ $(document).ready(function() {
     $("#transfer-kvm").hide();
     $("#startup-os-u").hide();
 
+    function btnAnimate(divToHide, divToShow, btnActive, btnInactive) {
+        $(divToHide).hide(0);
+        $(divToShow).addClass('animated fadeInUp');
+        $(divToShow).show();
+        $(btnActive).addClass('btn-press');
+        $(btnInactive).removeClass('btn-press');
+    }
+
     $("#installation-btn-l").click(function() {
-        $("#installation-os-u").hide(0);
-        $("#installation-os-c").addClass('animated fadeInUp');
-        $("#installation-os-c").show();
-        $(this).addClass('btn-press');
-        $("#installation-btn-r").removeClass('btn-press');
+        btnAnimate("#installation-os-u", "#installation-os-c", "#installation-btn-l", "#installation-btn-r");
+        btnAnimate("#startup-os-u", "#startup-os-c", "#startup-btn-l", "#startup-btn-r");
     });
 
     $("#installation-btn-r").click(function() {
-        $("#installation-os-c").hide(0);
-        $("#installation-os-u").addClass('animated fadeInUp');
-        $("#installation-os-u").show();
-        $(this).addClass('btn-press');
-        $("#installation-btn-l").removeClass('btn-press');
+        btnAnimate("#installation-os-c", "#installation-os-u", "#installation-btn-r", "#installation-btn-l");
+        btnAnimate("#startup-os-c", "#startup-os-u", "#startup-btn-r", "#startup-btn-l");
     });
 
     $("#build-btn-l").click(function() {
-        $("#build-openvz").hide(0);
-        $("#build-kvm").addClass('animated fadeInUp');
-        $("#build-kvm").show();
-        $(this).addClass('btn-press');
-        $("#build-btn-r").removeClass('btn-press');
+        btnAnimate("#build-openvz", "#build-kvm", "#build-btn-l", "#build-btn-r");
+        btnAnimate("#transfer-openvz", "#transfer-kvm", "#transfer-btn-l", "#transfer-btn-r");
     });
 
     $("#build-btn-r").click(function() {
-        $("#build-kvm").hide(0);
-        $("#build-openvz").addClass('animated fadeInUp');
-        $("#build-openvz").show();
-        $(this).addClass('btn-press');
-        $("#build-btn-l").removeClass('btn-press');
+        btnAnimate("#build-kvm", "#build-openvz", "#build-btn-r", "#build-btn-l");
+        btnAnimate("#transfer-kvm", "#transfer-openvz", "#transfer-btn-r", "#transfer-btn-l");
     });
 
     $("#transfer-btn-l").click(function() {
-        $("#transfer-openvz").hide(0);
-        $("#transfer-kvm").addClass('animated fadeInUp');
-        $("#transfer-kvm").show();
-        $(this).addClass('btn-press');
-        $("#transfer-btn-r").removeClass('btn-press');
+        btnAnimate("#transfer-openvz", "#transfer-kvm", "#transfer-btn-l", "#transfer-btn-r");
+        btnAnimate("#build-openvz", "#build-kvm", "#build-btn-l", "#build-btn-r");
     });
 
     $("#transfer-btn-r").click(function() {
-        $("#transfer-kvm").hide(0);
-        $("#transfer-openvz").addClass('animated fadeInUp');
-        $("#transfer-openvz").show();
-        $(this).addClass('btn-press');
-        $("#transfer-btn-l").removeClass('btn-press');
+        btnAnimate("#transfer-kvm", "#transfer-openvz", "#transfer-btn-r", "#transfer-btn-l");
+        btnAnimate("#build-kvm", "#build-openvz", "#build-btn-r", "#build-btn-l");
     });
 
     $("#startup-btn-l").click(function() {
-        $("#startup-os-u").hide(0);
-        $("#startup-os-c").addClass('animated fadeInUp');
-        $("#startup-os-c").show();
-        $(this).addClass('btn-press');
-        $("#startup-btn-r").removeClass('btn-press');
+        btnAnimate("#startup-os-u", "#startup-os-c", "#startup-btn-l", "#startup-btn-r");
+        btnAnimate("#installation-os-u", "#installation-os-c", "#installation-btn-l", "#installation-btn-r");
     });
 
     $("#startup-btn-r").click(function() {
-        $("#startup-os-c").hide(0);
-        $("#startup-os-u").addClass('animated fadeInUp');
-        $("#startup-os-u").show();
-        $(this).addClass('btn-press');
-        $("#startup-btn-l").removeClass('btn-press');
+        btnAnimate("#startup-os-c", "#startup-os-u", "#startup-btn-r", "#startup-btn-l");
+        btnAnimate("#installation-os-c", "#installation-os-u", "#installation-btn-r", "#installation-btn-l");
     });
 
 });
