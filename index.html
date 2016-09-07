@@ -10,6 +10,8 @@
         <!-- jQuery -->
         <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
         <script src="js/main.js"></script>
+        <!-- animate.css -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
 
     </head>
 
@@ -87,8 +89,8 @@
                 </div>
                 <h4><span class="step">1</span>安装必须的依赖</h4>
                 <ul class="btn-group">
-                    <li><a id="installation-btn-l" href="javascript:void(0)">CentOS</a></li>
-                    <li><a id="installation-btn-r" href="javascript:void(0)">Ubuntu</a></li>
+                    <li><a class="btn-release btn-press" id="installation-btn-l" href="javascript:void(0)">CentOS</a></li>
+                    <li><a class="btn-release" id="installation-btn-r" href="javascript:void(0)">Ubuntu</a></li>
                 </ul>
                 <div id="installation-os-c">
                     <p><i class="fa fa-chevron-circle-right fa-fw"></i> CentOS:</p>
@@ -112,24 +114,28 @@
                 </code></pre>
                 <h4><span class="step">3</span>编译</h4>
                 <ul class="btn-group">
-                    <li><a href="javascript:void(0)">Xen、KVM</a></li>
-                    <li><a href="javascript:void(0)">OpenVZ</a></li>
+                    <li><a class="btn-release" id="build-btn-l" href="javascript:void(0)">Xen、KVM</a></li>
+                    <li><a class="btn-release btn-press" id="build-btn-r" href="javascript:void(0)">OpenVZ</a></li>
                 </ul>
-                <p><i class="fa fa-chevron-circle-right fa-fw"></i> Xen、KVM类型</p>
-                <pre><code>
+                <div id="build-kvm">
+                    <p><i class="fa fa-chevron-circle-right fa-fw"></i> Xen、KVM类型</p>
+                    <pre><code>
                 $ ./configure --prefix=/usr --sysconfdir=/etc \
                 --enable-eap-mschapv2 --enable-xauth-eap --enable-eap-identity --enable-eap-tls \
                 --enable-eap-ttls --enable-eap-md5 --enable-eap-tnc --enable-eap-dynamic \
                 --enable-openssl --disable-gmp enable-eap-aka --enable-nat-transport
-                </code></pre>
-                <p><i class="fa fa-chevron-circle-right fa-fw"></i> OpenVZ类型 (需添加<b style="color:red">enable-kernel-libipsec</b>)</p>
-                <pre><code>
+                    </code></pre>
+                </div>
+                <div id="build-openvz">
+                    <p><i class="fa fa-chevron-circle-right fa-fw"></i> OpenVZ类型 (需添加<b style="color:red">enable-kernel-libipsec</b>)</p>
+                    <pre><code>
                 $ ./configure --prefix=/usr --sysconfdir=/etc \
                 --enable-eap-mschapv2 --enable-xauth-eap --enable-eap-identity --enable-eap-tls \
                 --enable-eap-ttls --enable-eap-md5 --enable-eap-tnc --enable-eap-dynamic \
                 --enable-openssl --disable-gmp enable-eap-aka --enable-nat-transport \
                 --enable-kernel-libipsec 
-                </code></pre>
+                    </code></pre>
+                </div>
                 <h4><span class="step">4</span>安装</h4>
                 <div class="warn-bar">
                     <i class="fa fa-exclamation-triangle fa-lg"></i>不要make && make install, 请确保make的时候没有错误提示
@@ -352,9 +358,10 @@ net.ipv4.tcp_syncookies = 1
                 </pre></code>
                 <h4><span class="step">2</span>设置 iptables 转发</h4>
                 <ul class="btn-group">
-                    <li><a href="javascript:void(0)">Xen、KVM</a></li>
-                    <li><a href="javascript:void(0)">OpenVZ</a></li>
+                    <li><a id="transfer-btn-l" class="btn-release" href="javascript:void(0)">Xen、KVM</a></li>
+                    <li><a id="transfer-btn-r" class="btn-release btn-press" href="javascript:void(0)">OpenVZ</a></li>
                 </ul>
+                <div id="transfer-openvz">
                 <p><i class="fa fa-chevron-circle-right fa-fw"></i> OpenVZ类型, 执行:</p>
                 <pre><code>
 # iptables -A INPUT -i venet0 -p esp -j ACCEPT
@@ -365,6 +372,8 @@ net.ipv4.tcp_syncookies = 1
 # iptables -A FORWARD -s 10.36.1.0/24  -j ACCEPT
 # iptables -A FORWARD -s 10.36.2.0/24  -j ACCEPT
                 </code></pre>
+                </div>
+                <div id="transfer-kvm">
                 <p><i class="fa fa-chevron-circle-right fa-fw"></i> Xen、KVM类型, 执行:</p>
                 <pre><code>
 # iptables -A INPUT -i eth0 -p esp -j ACCEPT
@@ -375,18 +384,23 @@ net.ipv4.tcp_syncookies = 1
 # iptables -A FORWARD -s 10.36.1.0/24  -j ACCEPT
 # iptables -A FORWARD -s 10.36.2.0/24  -j ACCEPT
                 </code></pre>
+                </div>
                 <h4><span class="step">3</span>开机自动载入 iptables 设定</h4>
                 <ul class="btn-group">
-                    <li><a href="javascript:void(0)">CentOS</a></li>
-                    <li><a href="javascript:void(0)">Ubuntu</a></li>
+                    <li><a id="startup-btn-l" class="btn-release btn-press" href="javascript:void(0)">CentOS</a></li>
+                    <li><a id="startup-btn-r" class="btn-release" href="javascript:void(0)">Ubuntu</a></li>
                 </ul>
+                <div id="startup-os-c">
                 <p><i class="fa fa-chevron-circle-right fa-fw"></i> CentOS, 执行:</p>
                 <pre><code>
 # /sbin/service iptables save
                 </code></pre>
+                </div>
+                <div id="startup-os-u">
                 <p><i class="fa fa-chevron-circle-right fa-fw"></i> Ubuntu, 执行:</p>
                 <pre><code>
                 </code></pre>
+                </div>
             </div>
 
             <div id="ipsec-start">

@@ -158,17 +158,20 @@ nav ol li {
     text-decoration: none;
     padding: 3px 15px;
     font-size: 19px;
+}
+
+.btn-group li a:hover:not(.btn-press) {
+    color: #327FC7;
+    border: 1px solid #327FC7;
+}
+
+.btn-release {
     color: rgba(0, 0, 0, 0.7);
     border: 1px solid #dddddd;
     background-color: #fff;
 }
 
-.btn-group li a:hover {
-    color: #327FC7;
-    border: 1px solid #327FC7;
-}
-
-.press {
+.btn-press {
     background-color: #327FC7;
     color: #fff;
     border: 1px solid #327FC7;
