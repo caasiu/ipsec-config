@@ -63,19 +63,19 @@
 
                 <p>用ssh连接上你的VPS, 在命令行中输入下列命令:</p>
                 <pre><code>
-                $ <span>cat</span> /dev/net/tun 
+$ <span>cat</span> /dev/net/tun 
                 </code></pre>
                 <p>输出应该是:</p>
                 <pre><code>
-                <span>cat</span>: /dev/net/tun: File descriptor in bad state
+<span>cat</span>: /dev/net/tun: File descriptor in bad state
                 </code></pre>
                 <p>再输入以下命令:</p>
                 <pre><code>
-                $ <span>cat</span> /dev/ppp 
+$ <span>cat</span> /dev/ppp 
                 </code></pre>
                 <p>输出应该是:</p>
                 <pre><code>
-                <span>cat</span>: /dev/ppp: No such device or address
+<span>cat</span>: /dev/ppp: No such device or address
                 </code></pre>
                 <p>若没有以上输出则无法继续下一步, 请联系你VPS的客服</p>
 
@@ -95,22 +95,22 @@
                 <div id="installation-os-c">
                     <p><i class="fa fa-chevron-circle-right fa-fw"></i> CentOS:</p>
                     <pre><code>
-                # yum update
-                # yum install gmp-devel pam-devel openssl-devel libssl-dev make gcc
+# yum update
+# yum install gmp-devel pam-devel openssl-devel libssl-dev make gcc
                     </code></pre>
                 </div>
                 <div id="installation-os-u">
                     <p><i class="fa fa-chevron-circle-right fa-fw"></i> Ubuntu:</p>
                     <pre><code>
-                # apt-get update
-                # apt-get install libgmp3-dev openssl-devel libssl-dev make gcc
+# apt-get update
+# apt-get install libgmp3-dev openssl-devel libssl-dev make gcc
                     </code></pre>
                 </div>
                 <h4><span class="step">2</span>下载Strongswan</h4>
                 <pre><code>
-                $ wget http://download.strongswan.org/strongswan.tar.bz2
-                $ tar xjvf strongswan.tar.bz2
-                $ cd strongswan-*
+$ wget http://download.strongswan.org/strongswan.tar.bz2
+$ tar xjvf strongswan.tar.bz2
+$ cd strongswan-*
                 </code></pre>
                 <h4><span class="step">3</span>编译</h4>
                 <ul class="btn-group">
@@ -120,20 +120,20 @@
                 <div id="build-kvm">
                     <p><i class="fa fa-chevron-circle-right fa-fw"></i> Xen、KVM类型</p>
                     <pre><code>
-                $ ./configure --prefix=/usr --sysconfdir=/etc \
-                --enable-eap-mschapv2 --enable-xauth-eap --enable-eap-identity --enable-eap-tls \
-                --enable-eap-ttls --enable-eap-md5 --enable-eap-tnc --enable-eap-dynamic \
-                --enable-openssl --disable-gmp enable-eap-aka --enable-nat-transport
+$ ./configure --prefix=/usr --sysconfdir=/etc \
+    --enable-eap-mschapv2 --enable-xauth-eap --enable-eap-identity --enable-eap-tls \
+    --enable-eap-ttls --enable-eap-md5 --enable-eap-tnc --enable-eap-dynamic \
+    --enable-openssl --disable-gmp enable-eap-aka --enable-nat-transport
                     </code></pre>
                 </div>
                 <div id="build-openvz">
                     <p><i class="fa fa-chevron-circle-right fa-fw"></i> OpenVZ类型 (需添加<b style="color:red">enable-kernel-libipsec</b>)</p>
                     <pre><code>
-                $ ./configure --prefix=/usr --sysconfdir=/etc \
-                --enable-eap-mschapv2 --enable-xauth-eap --enable-eap-identity --enable-eap-tls \
-                --enable-eap-ttls --enable-eap-md5 --enable-eap-tnc --enable-eap-dynamic \
-                --enable-openssl --disable-gmp enable-eap-aka --enable-nat-transport \
-                --enable-kernel-libipsec 
+$ ./configure --prefix=/usr --sysconfdir=/etc \
+    --enable-eap-mschapv2 --enable-xauth-eap --enable-eap-identity --enable-eap-tls \
+    --enable-eap-ttls --enable-eap-md5 --enable-eap-tnc --enable-eap-dynamic \
+    --enable-openssl --disable-gmp enable-eap-aka --enable-nat-transport \
+    --enable-kernel-libipsec 
                     </code></pre>
                 </div>
                 <h4><span class="step">4</span>安装</h4>
@@ -141,8 +141,8 @@
                     <i class="fa fa-exclamation-triangle fa-lg"></i>不要make && make install, 请确保make的时候没有错误提示
                 </div>
                 <pre><code>
-                # make
-                # make install
+# make
+# make install
                 </code></pre>
             </div>
 
@@ -150,16 +150,16 @@
                 <h2>生成证书</h2>
                 <h4><span class="step">1</span>生成自签名的根证书 (root CA)</h4>
                 <pre><code>
-                $ cd /etc/ipsec.d/
-                $ ipsec pki --gen --type rsa --size 2048 \
-                            --outform pem \
-                            > private/ca.key.pem
-                $ chmod 600 private/ca.key.pem
-                $ ipsec pki --self --ca --lifetime 730 \
-                            --in private/ca.key.pem --type rsa \
-                            --dn "C=CN, O=strongSwan, CN=strongSwan Root CA" \
-                            --outform pem \
-                            > cacerts/ca.cert.pem
+$ cd /etc/ipsec.d/
+$ ipsec pki --gen --type rsa --size 2048 \
+            --outform pem \
+            > private/ca.key.pem
+$ chmod 600 private/ca.key.pem
+$ ipsec pki --self --ca --lifetime 730 \
+            --in private/ca.key.pem --type rsa \
+            --dn "C=CN, O=strongSwan, CN=strongSwan Root CA" \
+            --outform pem \
+            > cacerts/ca.cert.pem
                 </code></pre>
                 <p>
                     size 2048: 2048 bit 的 RSA 密钥
@@ -170,19 +170,19 @@
                 </p>
                 <h4><span class="step">2</span>生成服务器证书 (host CA)</h4>
                 <pre><code>
-                $ cd /etc/ipsec.d/
-                $ ipsec pki --gen --type rsa --size 2048 \
-                            --outform pem \
-                            > private/host.key.pem
-                $ chmod 600 private/host.key.pem
-                $ ipsec pki --pub --in private/host.key.pem --type rsa | \
-                            ipsec pki --issue --lifetime 730 \
-                            --cacert cacerts/ca.cert.pem \
-                            --cakey private/ca.key.pem \
-                            --dn "C=CN, O=strongSwan, CN=vpn.example.com" \
-                            --san "1.2.3.4" \
-                            --flag serverAuth --flag ikeIntermediate \
-                            --outform pem > certs/host.cert.pem
+$ cd /etc/ipsec.d/
+$ ipsec pki --gen --type rsa --size 2048 \
+            --outform pem \
+            > private/host.key.pem
+$ chmod 600 private/host.key.pem
+$ ipsec pki --pub --in private/host.key.pem --type rsa | \
+            ipsec pki --issue --lifetime 730 \
+            --cacert cacerts/ca.cert.pem \
+            --cakey private/ca.key.pem \
+            --dn "C=CN, O=strongSwan, CN=vpn.example.com" \
+            --san "1.2.3.4" \
+            --flag serverAuth --flag ikeIntermediate \
+            --outform pem > certs/host.cert.pem
                 </code></pre>
                 <p>
                     CN: 填的是你服务器的 URL 或 IP
@@ -191,29 +191,29 @@
                 </p>
                 <h4><span class="step">3</span>生成客户端证书 (client CA)</h4>
                 <pre><code>
-                $ cd /etc/ipsec.d/
-                $ ipsec pki --gen --type rsa --size 2048 \
-                            --outform pem \
-                            > private/client.key.pem
-                $ chmod 600 private/client.key.pem
-                $ ipsec pki --pub --in private/client.key.pem --type rsa | \
-                            ipsec pki --issue --lifetime 730 \
-                            --cacert cacerts/ca.cert.pem \
-                            --cakey private/ca.key.pem \
-                            --dn "C=CN, O=strongSwan, CN=myself@example.com" \
-                            --san myself@example.com \
-                            --outform pem > certs/client.cert.pem
+$ cd /etc/ipsec.d/
+$ ipsec pki --gen --type rsa --size 2048 \
+            --outform pem \
+            > private/client.key.pem
+$ chmod 600 private/client.key.pem
+$ ipsec pki --pub --in private/client.key.pem --type rsa | \
+            ipsec pki --issue --lifetime 730 \
+            --cacert cacerts/ca.cert.pem \
+            --cakey private/ca.key.pem \
+            --dn "C=CN, O=strongSwan, CN=myself@example.com" \
+            --san myself@example.com \
+            --outform pem > certs/client.cert.pem
                 </code></pre>
                 <h4><span class="step">4</span>生成pkcs12证书</h4>
                 <div class="info-bar">
                     <i class="fa fa-exclamation-circle fa-lg"></i>使用IKEv2一定要生成该证书
                 </div>
                 <pre><code>
-                $ openssl pkcs12 -export -inkey private/client.key.pem \
-                          -in certs/client.cert.pem -name "My own VPN client certificate" \
-                          -certfile cacerts/ca.cert.pem \
-                          -caname "strongSwan Root CA" \
-                          -out client.p12
+$ openssl pkcs12 -export -inkey private/client.key.pem \
+        -in certs/client.cert.pem -name "My own VPN client certificate" \
+        -certfile cacerts/ca.cert.pem \
+        -caname "strongSwan Root CA" \
+        -out client.p12
                 </code></pre>
                 <div class="danger-bar">
                     <i class="fa fa-ban fa-lg"></i>caname 一定要与<a href="#certification">第一步</a>的 CN(common name) 一致
@@ -397,9 +397,18 @@ net.ipv4.tcp_syncookies = 1
                 </code></pre>
                 </div>
                 <div id="startup-os-u">
-                <p><i class="fa fa-chevron-circle-right fa-fw"></i> Ubuntu, 执行:</p>
+                <p><i class="fa fa-chevron-circle-right fa-fw"></i> Ubuntu:</p>
+                <p>先将防火墙规则保存到/etc/iptables.up.rules文件中</p>
                 <pre><code>
+# iptables-save > /etc/iptables.up.rules
                 </code></pre>
+                <p>然后修改/etc/network/interfaces，在网卡eth0手动添加最后一行:</p>
+                <pre><code>
+auto eth0
+iface eth0 inet dhcp
+pre-up iptables-restore < /etc/iptables.up.rules
+                </code></pre>
+                <p>详细参考：<a href="https://help.ubuntu.com/community/IptablesHowTo">Ubuntu IptablesHowTo<i class="fa fa-external-link fa-fw"></i></a></p>
                 </div>
             </div>
 
