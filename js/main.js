@@ -71,4 +71,18 @@ $(document).ready(function() {
         $("#nav-ipt span").toggleClass("clockwise");
     });
 
+    //make the content menu stick according to the scroll
+    var docscrollTop, menuPosTop;
+    menuPosTop = $(".content").offset().top;
+    $(document).scroll(function(){
+        docscrollTop = $(document).scrollTop();
+
+        if (menuPosTop < docscrollTop){
+            $(".content").addClass('stick');
+        }
+
+        if (menuPosTop > docscrollTop){
+            $(".content").removeClass('stick');
+        }
+    });
 });

@@ -45,6 +45,13 @@ header {
     box-shadow: 0 6px 8px rgba(0,0,0,0.5);
 }
 
+.stick {
+    top: 40px;
+    left: 0;
+    position: fixed;
+    z-index: 5;
+}
+
 .content li {
     margin: 0;
     position: relative;
@@ -335,6 +342,6 @@ footer ul li a:hover {
     }
 
     .content {
-        dispaly: none;
+        display: none;
     }
 }
