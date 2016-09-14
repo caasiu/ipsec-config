@@ -55,4 +55,20 @@ $(document).ready(function() {
         btnAnimate("#installation-os-c", "#installation-os-u", "#installation-btn-r", "#installation-btn-l");
     });
 
+    $("#nav-ins").click(function() {
+        $("#nav-ins span").toggleClass("clockwise");
+    });
+
+    $("#nav-cer").click(function() {
+        $("#nav-cer span").toggleClass("clockwise");
+    });
+
+    $("#nav-cfg").click(function() {
+        $("#nav-cfg span").toggleClass("clockwise");
+    });
+
+    $("#nav-ipt").click(function() {
+        $("#nav-ipt span").toggleClass("clockwise");
+    });
+
 });

@@ -34,6 +34,67 @@ header {
     font-size: 18px;
 }
 
+.content {
+    margin-left: 15px;
+    padding-left: 0;
+    width: 240px;
+    float: left;
+    font-size: 20px;
+    border: 1px solid #dddddd;
+    background-color: #fff;
+    box-shadow: 0 6px 8px rgba(0,0,0,0.5);
+}
+
+.content li {
+    margin: 0;
+    position: relative;
+    color: rgba(0,0,0);
+    list-style: none;
+    display: block;
+}
+
+.content li::before{
+    content: '';
+    position: absolute;
+    left: 10px;
+    bottom: 0;
+    height: 1px;
+    width: 220px;
+    border-bottom: 1px solid #dddddd;
+}
+
+.content li a {
+    padding: 8px 15px;
+    display: block;
+    text-decoration: none;
+    color: #000;
+}
+
+.content li a:hover {
+    color: #fff;
+    background-color: #66BBFF;
+}
+
+.content li a span {
+    float: right;
+}
+
+#toTop {
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+}
+
+.clockwise {
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
 #container {
     width: 820px;
     height: auto;
@@ -69,19 +130,6 @@ header {
 
 #summary ul li{
     list-style: none;
-}
-
-nav {
-    /*padding-left:35px;*/
-}
-
-nav ol {
-    border-left: 5px solid #03a9f4;
-}
-
-nav ol li {
-    color: #03a9f4;
-    list-style: decimal;
 }
 
 .info-bar {
@@ -280,10 +328,13 @@ footer ul li a:hover {
 
 @media only screen and (max-width: 500px) {
     #container {
-        width: 820px;
+        width: 100%;
         margin: 10px auto;
         color: rgba(0, 0, 0, 0.7);
         padding: 0;
     }
 
+    .content {
+        dispaly: none;
+    }
 }

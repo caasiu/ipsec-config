@@ -23,6 +23,18 @@
             </div>
         </header>
 
+        <ul class="content">
+            <li><a href="#introduction">IPSec 简介<span>></span></a></li>
+            <li><a href="#precondition">开始之前<span>></span></a></li>
+            <li><a href="#installation" id="nav-ins">安装 Strongswan<span>+</span></a></li>
+            <li><a href="#certification" id="nav-cer">生成证书<span>+</span></a></li>
+            <li><a href="#config" id="nav-cfg">Strongswan 配置<span>+</span></a></li>
+            <li><a href="#iptable"id="nav-ipt">配置防火墙<span>+</span></a></li>
+            <li><a href="#ipsec-start">启用 IPSec<span>></span></a></li>
+            <li><a>客户端设置<span>+</span></a></li>
+            <li><a href="">返回顶端<span id="toTop">></span></a></li>
+        </ul>
+
         <div id="container">
             <div id="summary">
                 <p>
@@ -31,22 +43,9 @@
                     在CentOS/Ubuntu使用Strongswan架设IPSec Ikev1/v2 VPN 教程
                 </p>
             </div>
-            <nav class="toc">
-                <h1>目录</h1>
-                <ol>
-                    <li>What's IPSec?</li>
-                    <li>Before Setup</li>
-                    <li>Install Strongswan</li>
-                    <li>Certification</li>
-                    <li>Strongswan Config</li>
-                    <li>iptable config</li>
-                    <li>Start Strongswan</li>
-                    <li>Client Setup</li>
-                </ol>
-            </nav>
 
             <div id="introduction">
-                <h2>IPSec 是什么？</h2>
+                <h2>IPSec 简介</h2>
                 <p>
                 IPSec是虚拟私密网络(VPN)的一种协议，它通过认证和加密每一个IP数据包来确保IP通信的安全。它由两个阶段组成，第一阶段（Phrase 1, ph1），交换金钥建立连接，使用互联网金钥交换（ike）协议; 第二阶段（Phrase 2, ph2），连接建立后对数据进行加密传输，使用封装安全载荷（esp）协议。
                 </br>
@@ -57,7 +56,7 @@
             <div id="precondition">
                 <h2>开始之前</h2>
                 <div class="info-bar">
-                    <i class="fa fa-exclamation-circle fa-lg"></i>若已清楚VPS虚拟化类型及其 tun/tap 支持ppp, 请跳到 <a href="#installation">安装Strongswan</a>
+                    <i class="fa fa-exclamation-circle fa-lg"></i>若已清楚VPS虚拟化类型及其 tun/tap 支持ppp, 请跳到<a href="#installation">#安装 Strongswan</a>
                 </div>
                 <div>
 
@@ -83,7 +82,7 @@ $ <span>cat</span> /dev/ppp
             </div>
 
             <div id="installation">
-                <h2>安装Strongswan</h2>
+                <h2>安装 Strongswan</h2>
                 <div class="info-bar">
                     <i class="fa fa-exclamation-circle fa-lg"></i>建议使用手动安装, 特别是OpenVZ的VPS
                 </div>
