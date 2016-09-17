@@ -3,6 +3,7 @@
 <html>
     <head>
         <title>IPSec VPN Configuration</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
         <link rel="stylesheet" type="text/css" href="css/main.css">
         <!-- Font Awesome -->
@@ -102,7 +103,7 @@ $ <span>cat</span> /dev/ppp
                     <p><i class="fa fa-chevron-circle-right fa-fw"></i> Ubuntu:</p>
                     <pre><code>
 # apt-get update
-# apt-get install libgmp3-dev openssl-devel libssl-dev make gcc
+# apt-get install libgmp3-dev openssl libssl-dev make gcc
                     </code></pre>
                 </div>
                 <h4><span class="step">2</span>下载Strongswan</h4>
@@ -122,7 +123,7 @@ $ cd strongswan-*
 $ ./configure --prefix=/usr --sysconfdir=/etc \
     --enable-eap-mschapv2 --enable-xauth-eap --enable-eap-identity --enable-eap-tls \
     --enable-eap-ttls --enable-eap-md5 --enable-eap-tnc --enable-eap-dynamic \
-    --enable-openssl --disable-gmp enable-eap-aka --enable-nat-transport
+    --enable-openssl --disable-gmp --enable-eap-aka --enable-nat-transport
                     </code></pre>
                 </div>
                 <div id="build-openvz">
@@ -131,7 +132,7 @@ $ ./configure --prefix=/usr --sysconfdir=/etc \
 $ ./configure --prefix=/usr --sysconfdir=/etc \
     --enable-eap-mschapv2 --enable-xauth-eap --enable-eap-identity --enable-eap-tls \
     --enable-eap-ttls --enable-eap-md5 --enable-eap-tnc --enable-eap-dynamic \
-    --enable-openssl --disable-gmp enable-eap-aka --enable-nat-transport \
+    --enable-openssl --disable-gmp --enable-eap-aka --enable-nat-transport \
     --enable-kernel-libipsec 
                     </code></pre>
                 </div>
@@ -282,6 +283,7 @@ conn IPSec-IKEv2
     esp = aes256-sha256,aes256-sha1,3des-sha1!
     eap_identity = %any
     fragmentation = yes
+    rekey = no
     
     #left -- local(server) side
     left = %any
@@ -317,7 +319,7 @@ user4 : EAP "password"
                 </code></pre>
                 <h4><span class="step">3</span>编辑 strongswan.conf</h4>
                 <pre><code>
-# strongswan.conf - strongSwan configuration file
+# /etc/strongswan.conf - strongSwan configuration file
 
 charon {
     load_modular = yes
@@ -356,6 +358,9 @@ net.ipv6.conf.all.forwarding = 1
 net.ipv4.tcp_syncookies = 1
                 </pre></code>
                 <h4><span class="step">2</span>设置 iptables 转发</h4>
+                <div class="info-bar">
+                    <i class="fa fa-exclamation-circle fa-lg"></i>venet0 / eth0 以系统网卡名称为准
+                </div>
                 <ul class="btn-group">
                     <li><a id="transfer-btn-l" class="btn-release" href="javascript:void(0)">Xen、KVM</a></li>
                     <li><a id="transfer-btn-r" class="btn-release btn-press" href="javascript:void(0)">OpenVZ</a></li>

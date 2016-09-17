@@ -43,13 +43,13 @@ header {
     border: 1px solid #dddddd;
     background-color: #fff;
     box-shadow: 0 6px 8px rgba(0,0,0,0.5);
+    z-index: 5;
 }
 
 .stick {
     top: 40px;
     left: 0;
     position: fixed;
-    z-index: 5;
 }
 
 .content li {
@@ -333,9 +333,9 @@ footer ul li a:hover {
 }
 
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-device-width: 600px) {
     #container {
-        width: 100%;
+        width: 90%;
         margin: 10px auto;
         color: rgba(0, 0, 0, 0.7);
         padding: 0;
@@ -343,5 +343,8 @@ footer ul li a:hover {
 
     .content {
         display: none;
+    }
+    pre {
+        overflow-x: scroll;
     }
 }
