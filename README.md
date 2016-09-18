@@ -6,13 +6,12 @@
 ## Manual Setup
 
 手动设置(推荐)
-
 参考这个教程： https://caasiu.github.io/ipsec-config
 
 ## Quick Setup
 
 Please use the [ipsec-setup.sh](ipsec-setup.sh)
-
 Download using wget:
-
 `wget --no-check-certificate https://github.com/caasiu/ipsec-config/blob/master/ipsec-setup.sh`
+Then run the script as root
+`bash ipsec-setup.sh`
