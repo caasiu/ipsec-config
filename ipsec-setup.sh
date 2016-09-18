@@ -19,7 +19,7 @@ function check_vps(){
 # only run this script as root
 if [ $EUID -ne 0 ]
 then
-    echo "Error: This script must be run as root!"
+    echo -e "\033[0;31;1m Error: This script must be run as root! \033[0m"
 else
     # check tun/tap support
     TunString="File descriptor in bad state"
@@ -29,15 +29,13 @@ else
     then
         if cat /dev/ppp |& grep -q "$PPPString"
         then
-            echo "VPS can setup IPSec"
-            echo -e "\n"
-
+            # get user's vps information
             get_vps_info
         else
-            echo "Error: VPS does not support!"
+            echo -e "\033[0;31;1m Error: VPS does not support ppp! \033[0m"
         fi
     else
-        echo "Error: VPS does not support!"
+        echo -e "\033[0;31;1m Error: VPS does not support tun/tap! \033[0m"
     fi
 fi
 }
@@ -47,9 +45,9 @@ function get_vps_info(){
     VI_Array=(OpenVZ Xen/KVM)
 
     # Users input their VPS information
-    echo "VPS Operation System 1)CentOS or 2)Ubuntu"
+    echo -e "VPS Operation System \033[0;34;1m 1)CentOS \033[0m or \033[0;34;1m 2)Ubuntu \033[0m"
     read -p "Your Choice (default=1): " OS_NO
-    echo "VPS Virtualisation 1)OpenVZ or 2)Xen/KVM" 
+    echo -e "VPS Virtualisation \033[0;34;1m 1)OpenVZ \033[0m or \033[0;34;1m 2)Xen/KVM \033[0m" 
     read -p "Your Choice (default=1): " VI_NO
     read -p "Input IP address(IPv4) of your VPS: " VPS_IP
 
@@ -71,17 +69,20 @@ function get_vps_info(){
 
     echo -e "\n"
     echo "############# VPS information #############"
-    echo "VPS Operation System: [$OS]"
-    echo "VPS Virtualization Infrastructure: [$VI]"
-    echo "VPS IP Address: [$VPS_IP]"
+    echo -e "VPS Operation System: [\033[0;33;1m $OS \033[0m]"
+    echo -e "VPS Virtualization Infrastructure: [\033[0;33;1m $VI \033[0m]"
+    echo -e "VPS IP Address: [\033[0;33;1m $VPS_IP \033[0m]"
     echo ""
 
     # VPS informations confirm
-    read -p "Continue running this script?  [y/N] " CONFIRM
+    echo -e "\033[0;31;1m Continue running this script? \033[0m [y/N] \c"
+    read CONFIRM
 
     if [ "$CONFIRM" == "y" ]
     then
         install_packages
+    else
+        echo -e "\033[0;31;1m Script Interrupt: user contradict VPS information \033[0m"
     fi
 }
 
@@ -126,10 +127,15 @@ function precondition(){
     fi
 
     make && make install
+
+    echo "packages installation complete"
     create_ca
 }
 
 function create_ca(){
+    echo ""
+    echo "Now create certifications"
+
     cd /etc/ipsec.d/
 
     # root CA
@@ -172,7 +178,7 @@ function create_ca(){
     echo ""
     echo "pkcs12 certification creation will ask for a password, which is for decode when install the pkcs12 CA on client"
     echo "password is optional, and four-words password is good for IOS device"
-    echo "pkcs12 will store in /etc/ipsec.d/client.p12"
+    echo -e "pkcs12 will store in \033[0;33;1m /etc/ipsec.d/client.p12 \033[0m"
     echo ""
     #pkcs12 CA
     openssl pkcs12 -export -inkey private/client.key.pem \
@@ -181,6 +187,8 @@ function create_ca(){
         -caname "strongSwan Root CA" \
         -out client.p12
 
+    echo "certifications creation complete"
+    ipsec_configuration
 }
 
 function ipsec_configuration(){
@@ -248,6 +256,7 @@ conn IPSec-IKEv2
 
 EOF
 
+    strongswan_configuration
 }
 
 function strongswan_configuration(){
@@ -275,9 +284,11 @@ include strongswan.d/*.conf
 
 EOF
 
+    secrets_configuration
 }
 
 function secrets_configuration(){
+    echo ""
     echo "Now configure the authrisation..."
     echo ""
 
@@ -311,7 +322,7 @@ function secrets_configuration(){
     done
 
     echo ""
-    echo "You can change the username and password in /etc/ipsec.secrets"
+    echo "You can add or change the username and password in /etc/ipsec.secrets"
     cat > /etc/ipsec.secrets <<-EOF
 # /etc/ipsec.secrets
 
@@ -328,6 +339,7 @@ ${eapUser} : EAP "${eapPwd}"
 
 EOF
 
+    iptables_configuration
 }
 
 function iptables_configuration(){
@@ -376,7 +388,28 @@ function iptables_configuration(){
 
     ipsec start
 
-    echo "setup success"
+    success_info
+}
+
+function success_info(){
+    echo -e "\n"
+    echo -e "##############################################################"
+    echo -e "#"
+    echo -e "# \033[0;32;1m Setup Complete \033[0m"
+    echo -e "#"
+    echo -e "# Your VPS IP is: [\033[0;31;1m ${VPS_IP} \033[0m]"
+    echo -e "#"
+    echo -e "# Using IKEv1 + PSK"
+    echo -e "# psk: \033[0;34;1m ${PSK} \033[0m"
+    echo -e "# username: \033[0;34;1m ${pskUser} \033[0m"
+    echo -e "# password: \033[0;34;1m ${pskPwd} \033[0m"
+    echo -e "#"
+    echo -e "# Using IKEv2 + EAP"
+    echo -e "# username: \033[0;33;1m ${eapUser} \033[0m"
+    echo -e "# password: \033[0;33;1m ${eapPwd} \033[0m"
+    echo -e "#"
+    echo -e "##############################################################"
+    echo -e ""
 }
 
 # run the main function
