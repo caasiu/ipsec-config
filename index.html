@@ -20,7 +20,7 @@
         <header>
             <div class="header-title">
                 <span class="section-title">IPSec VPN 架设教程</span></br>
-                <span class="section-data">Last Modified: 2016.08.27</span>
+                <span class="section-data">Last Modified: 2016.10.03</span>
             </div>
         </header>
 
@@ -38,17 +38,21 @@
         <div id="container">
             <div id="summary">
                 <p>
-                    A Chinese guide for IPSec IKEv1/v2 VPN setup on CentOS/Ubuntu VPS
-                    <br>
-                    在CentOS/Ubuntu使用Strongswan架设IPSec Ikev1/v2 VPN 教程
+                    在 CentOS/Ubuntu VPS上使用Strongswan架设IPSec Ikev1/v2 VPN 教程
                 </p>
             </div>
 
             <div id="introduction">
                 <h2>IPSec 简介</h2>
                 <p>
-                IPSec是虚拟私密网络(VPN)的一种协议，它通过认证和加密每一个IP数据包来确保IP通信的安全。它由两个阶段组成，第一阶段（Phrase 1, ph1），交换金钥建立连接，使用互联网金钥交换（ike）协议; 第二阶段（Phrase 2, ph2），连接建立后对数据进行加密传输，使用封装安全载荷（esp）协议。
-                </br>
+                    IPSec是虚拟私密网络(VPN)的一种协议，它通过认证和加密每一个IP数据包来确保IP通信的安全。<br>
+                    <ul>
+                    它由两个阶段组成:
+                    <li>第一阶段（Phrase 1, ph1）</li>
+                    交换金钥建立连接，使用互联网金钥交换（ike）协议; 
+                    <li>第二阶段（Phrase 2, ph2）</li>
+                    连接建立后对数据进行加密传输，使用封装安全载荷协议（ESP）或预共享密钥协议（PSK）。
+                    </ul>
                 参考：<a href="https://en.wikipedia.org/wiki/IPsec">维基百科 IPsec 词条(En)<i class="fa fa-external-link fa-fw"></i></a>
                 </p>
             </div>
@@ -137,7 +141,7 @@ $ ./configure --prefix=/usr --sysconfdir=/etc \
                 </div>
                 <h4><span class="step">4</span>安装</h4>
                 <div class="warn-bar">
-                    <i class="fa fa-exclamation-triangle fa-lg"></i>不要make && make install, 请确保make的时候没有错误提示
+                    <i class="fa fa-exclamation-triangle fa-lg"></i>请确保make的时候没有错误提示
                 </div>
                 <pre><code>
 # make
@@ -344,18 +348,15 @@ include strongswan.d/*.conf
             <div id="iptable">
                 <h2>配置防火墙</h2>
                 <h4><span class="step">1</span>编辑 sysctl.conf</h4>
-                <p>在 /etc/sysctl.conf 中增加如下行或去掉下列行的"#", 保存后执行 sysctl -p</p>
                 <div class="warn-bar">
-                    <i class="fa fa-exclamation-triangle fa-lg"></i>若执行后报错, 重新编辑 sysctl.conf 将报错的部分#注释掉保存, <span style="color:red">直到执行sysctl -p不再报错为止</span>
+                    <i class="fa fa-exclamation-triangle fa-lg"></i>若编辑/etc/sysctl.conf，保存后请确认<span style="color:red">执行sysctl -p不会报错</span>
                 </div>
+                <p><i class="fa fa-chevron-circle-right fa-fw"></i> 在终端执行下列命令(需要root权限):</p>
                 <pre><code>
-net.ipv4.ip_forward = 1
-net.ipv4.conf.all.accept_redirects = 0 
-net.ipv4.conf.all.send_redirects = 0
-net.ipv6.conf.all.forwarding = 1
-
-net.ipv4.tcp_syncookies = 1
-                </pre></code>
+# sysctl -w net.ipv4.ip_forward = 1
+# sysctl -w net.ipv4.conf.all.accept_redirects = 0 
+# sysctl -w net.ipv4.conf.all.send_redirects = 0
+                </code></pre>
                 <h4><span class="step">2</span>设置 iptables 转发</h4>
                 <div class="info-bar">
                     <i class="fa fa-exclamation-circle fa-lg"></i>venet0 / eth0 以系统网卡名称为准

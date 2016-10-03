@@ -20,7 +20,7 @@ header {
     margin: 0 auto;
     overflow: hidden;
     /*padding-left: 0;*/
-    width: 1160px;
+    width: auto;
     white-space: nowrap;
     max-width: 760px;
 }
@@ -110,6 +110,20 @@ header {
   }
 }
 
+@-moz-keyframes pulse {
+  from {
+    -moz-transform: scale3d(1, 1, 1);
+  }
+
+  50% {
+    -moz-transform: scale3d(1.05, 1.05, 1.05);
+  }
+
+  to {
+    -moz-transform: scale3d(1, 1, 1);
+  }
+}
+
 .content li:hover {
     -webkit-animation-name: pulse;
     -webkit-animation-duration: 1s;
@@ -117,6 +131,9 @@ header {
     animation-name: pulse;
     animation-duration: 1s;
     animation-iteration-count: 2;
+    -moz-animation-name: pulse;
+    -moz-animation-duration: 1s;
+    -moz-animation-iteration-count: 2;
 }
 
 @-webkit-keyframes hue {
@@ -159,6 +176,9 @@ header {
     animation-name: shutter-out;
     animation-duration: 0.3s;
     animation-timing-function: ease-in-out;
+    -moz-animation-name: shutter-out;
+    -moz-animation-duration: 0.3s;
+    -moz-animation-timing-function: ease-in-out;
 }
 
 @-webkit-keyframes shutter-out {
@@ -169,6 +189,11 @@ header {
 @keyframes shutter-out {
     from {transform: scaleX(0);}
     to {transform: scaleX(1);}
+}
+
+@-moz-keyframes shutter-out {
+    from {-moz-transform: scaleX(0);}
+    to {-moz-transform: scaleX(1);}
 }
 
 .content li a span {
@@ -283,7 +308,7 @@ header {
 }
 
 .btn-group {
-    max-width: 300px;
+    max-width: 230px;
     margin: 10px auto 0px;
     padding: 0px;
     overflow: hidden;
@@ -407,7 +432,7 @@ footer {
 }
 
 footer ul li {
-    list-stlye: none;
+    list-style: none;
     display: inline;
     margin-right: 20px;
 }
@@ -422,18 +447,117 @@ footer ul li a:hover {
 }
 
 
-@media only screen and (max-device-width: 600px) {
+@media only screen and (max-device-width: 820px) {
+    header {
+        height: 90px;
+        padding-top: 50px;
+    }
+
+    .header-title {
+        font-size: 34px;
+        padding-left: 15px;
+        padding-right: 15px;
+        width: auto;
+        line-height: 1;
+    }
+
+    .section-title {
+        font-size: 34px;
+        width: auto;
+    }
+
     #container {
         width: 90%;
         margin: 10px auto;
         color: rgba(0, 0, 0, 0.7);
         padding: 0;
+        font-size: 13px;
+        line-height: 24px;
+        letter-spacing: .1px;
+    }
+
+    #container p {
+        font-size: 13px;
+    }
+
+    #container h2 {
+        font-size: 18px;
+    }
+
+    #container h4 {
+        font-size: 15px;
+    }
+
+    #summary {
+        padding: 5px;
+    }
+
+    #introduction ul {
+        padding-left: 15px;
     }
 
     .content {
         display: none;
     }
     pre {
+        padding-left: 5px;
         overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    code {
+        font-size: 12px;
+    }
+
+    .step {
+        font-size: 15px;
+        padding: 2px 5px;
+    }
+
+    .info-bar {
+        font-size: 15px;
+        padding: 5px;
+        margin: 5px auto;
+    }
+    
+    .info-bar i {
+        margin: auto 5px;
+    }
+
+    .warn-bar {
+        font-size: 15px;
+        padding: 5px;
+        margin: 5px auto;
+    }
+    
+    .warn-bar i {
+        margin: auto 5px;
+    }
+
+    .danger-bar {
+        font-size: 15px;
+        padding: 5px;
+        margin: 5px auto;
+    }
+    
+    .danger-bar i {
+        margin: auto 5px;
+    }
+
+    .btn-group {
+        width: 195px;
+    }
+
+    .btn-group li a {
+        font-size: 15px;
+    }
+
+    footer {
+        width: 90%;
+        font-size: 10px;
+    }
+
+    footer ul li {
+        margin-right: 0px;
     }
 }
