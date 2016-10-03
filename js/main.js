@@ -6,6 +6,7 @@ $(document).ready(function() {
     $("#build-kvm").hide();
     $("#transfer-kvm").hide();
     $("#startup-os-u").hide();
+    $(".content").find('a').addClass('navInactive');
 
     function btnAnimate(divToHide, divToShow, btnActive, btnInactive) {
         $(divToHide).hide(0);
@@ -72,17 +73,54 @@ $(document).ready(function() {
     });
 
     //make the content menu stick according to the scroll
-    var docscrollTop, menuPosTop;
-    menuPosTop = $(".content").offset().top;
-    $(document).scroll(function(){
-        docscrollTop = $(document).scrollTop();
+    var menuPosTop = $(".content").offset().top;
+    var contentMenuStick = function(elementPosTop){
+        let docscrollTop = $(document).scrollTop();
 
-        if (menuPosTop < docscrollTop){
+        if (elementPosTop < docscrollTop){
             $(".content").addClass('stick');
         }
 
-        if (menuPosTop > docscrollTop){
+        if (elementPosTop > docscrollTop){
             $(".content").removeClass('stick');
         }
+    }
+
+    var setNavActive = function(){
+        var hTarget = $("#container").find('h2');
+        var winScrollTop = $(window).scrollTop();
+        hTarget.each(function(index, H){
+            (index < hTarget.length - 1) ? next_H_Top = hTarget.eq(index + 1).offset().top : next_H_Top = hTarget.last().offset().top;
+
+            e = $(".content").find("[href='#" + $(this).parent().attr("id") + "']"); 
+
+            if (winScrollTop < hTarget.eq(0).offset().top){
+                $(".content").find('a').removeClass("navActive");
+            }
+
+            if (winScrollTop >= $(document).height() - $(window).height()){
+                $(".content").find('a').removeClass("navActive");
+                $(".content").find("[href='#ipsec-start']").addClass('navActive');
+                return false;
+            }
+
+            if ($(H).offset().top < winScrollTop + 100 && winScrollTop + 100 < next_H_Top){
+                $(".content").find('a').removeClass("navActive");
+                e.addClass("navActive");
+                return false;
+            }
+            /*
+            }else if (hTarget.length == index + 1){
+                e.addClass("navActive");
+                return false;
+            }
+            */
+        })
+
+    }
+
+    $(window).scroll(function(){
+        contentMenuStick(menuPosTop);
+        setNavActive();
     });
 });
