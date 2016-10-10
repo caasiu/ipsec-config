@@ -48,10 +48,10 @@
                     IPSec是虚拟私密网络(VPN)的一种协议，它通过认证和加密每一个IP数据包来确保IP通信的安全。<br>
                     <ul>
                     它由两个阶段组成:
-                    <li>第一阶段（Phrase 1, ph1）</li>
-                    交换金钥建立连接，使用互联网金钥交换（ike）协议; 
-                    <li>第二阶段（Phrase 2, ph2）</li>
-                    连接建立后对数据进行加密传输，使用封装安全载荷协议（ESP）或预共享密钥协议（PSK）。
+                    <li>第一阶段（Security Association）</li>
+                    使用互联网金钥交换（ike）协议，目的是通过Diffie-Hellman密钥交换算法来生成一个共享密钥来加密进一步IKE通信的安全认证通道; 
+                    <li>第二阶段（IPsec Protocol Suite）</li>
+                    连接建立后对数据进行加密传输，使用封装安全载荷协议（ESP）或验证头部（Authentication Header）。
                     </ul>
                 参考：<a href="https://en.wikipedia.org/wiki/IPsec">维基百科 IPsec 词条(En)<i class="fa fa-external-link fa-fw"></i></a>
                 </p>
@@ -253,8 +253,6 @@ config setup
 
 
 conn %default
-    keyexchange = ike
-    
     dpdaction = clear
     dpddelay = 35s
     dpdtimeout = 300s
@@ -287,6 +285,7 @@ conn IPSec-IKEv2
     eap_identity = %any
     fragmentation = yes
     rekey = no
+    mobike = no
     
     #left -- local(server) side
     left = %any

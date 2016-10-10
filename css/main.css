@@ -397,7 +397,7 @@ header {
 
 pre {
     padding-left: 25px;
-    overflow: auto;
+    overflow-x: auto;
     background-color: #fff;
     border: 1px solid #eee;
     white-space: pre;
@@ -405,7 +405,6 @@ pre {
 }
 
 code {
-    overflow: auto;
     font-size: 18px;
     font-family: "Roboto", "Helvetica", sans-serif;
     word-spacing: 2px;

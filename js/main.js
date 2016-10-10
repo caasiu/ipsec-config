@@ -1,6 +1,8 @@
 
 $(document).ready(function() {
 
+    $(window).on('resize', function(){location.reload();})
+
     //init
     $("#installation-os-u").hide();
     $("#build-kvm").hide();
@@ -109,12 +111,6 @@ $(document).ready(function() {
                 e.addClass("navActive");
                 return false;
             }
-            /*
-            }else if (hTarget.length == index + 1){
-                e.addClass("navActive");
-                return false;
-            }
-            */
         })
 
     }
