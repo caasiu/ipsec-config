@@ -1,8 +1,6 @@
 
 $(document).ready(function() {
 
-    $(window).on('resize', function(){location.reload();})
-
     //init
     $("#installation-os-u").hide();
     $("#build-kvm").hide();

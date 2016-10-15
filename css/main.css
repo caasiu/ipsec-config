@@ -446,7 +446,7 @@ footer ul li a:hover {
 }
 
 
-@media only screen and (max-device-width: 820px) {
+@media screen and (max-width: 820px) {
     header {
         height: 90px;
         padding-top: 50px;
